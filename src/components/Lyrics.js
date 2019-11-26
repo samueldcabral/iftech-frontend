@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { getLyrics } from '../services/api';
+import Spinner from '../components/Spinner'
 
 const Lyrics = props => {
   const [lyrics, setLyrics] = useState("")
@@ -9,8 +10,6 @@ const Lyrics = props => {
   useEffect(() => {
     async function loadLyrics() {
       const lyrics = await getLyrics(artist, song);
- 
-      console.log(lyrics.data)
       setLyrics(lyrics.data)
     }
     
@@ -19,11 +18,20 @@ const Lyrics = props => {
   }, [artist, song])
 
   return (
-    <div className="container my-5">
-      {lyrics !== "" ? lyrics.lyrics.includes("\n") ? 
-          lyrics.lyrics.split("\n").map(x => <div>{x}</div>)    : "lolas" 
-                                                                : "lol"}
-    </div>
+    <>
+      <button className="btn btn-primary" onClick={() => props.history.goBack()}>voltar</button>
+      <div className="container my-5">
+        {lyrics !== "" ? 
+        
+            lyrics.lyrics.includes("\n") &&
+            lyrics.lyrics.split("\n").map((x, index) => <p key={index}>{x}</p>)    
+  
+                       : 
+
+            <Spinner/>
+        }           
+      </div>
+    </>
   )
 }
 
